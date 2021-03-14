@@ -1,0 +1,72 @@
+{
+  "name": "AnsibleTest",
+  "description": "This is a simple API for Pizza Shack online pizza delivery store.",
+  "context": "pizza",
+  "version": "1.0.0",
+  "provider": "admin",
+  "lifeCycleStatus": "CREATED",
+  "responseCachingEnabled": false,
+  "destinationStatsEnabled": "Disabled",
+  "hasThumbnail": false,
+  "isDefaultVersion": false,
+  "enableSchemaValidation": false,
+  "enableStore": true,
+  "type": "HTTP",
+  "transport": [
+    "http",
+    "https"
+  ],
+  "tags": [
+    "substract",
+    "add"
+  ],
+  "policies": [
+    "Unlimited"
+  ],
+  "apiThrottlingPolicy": "Unlimited",
+  "securityScheme": ["oauth2"],
+  "maxTps": {
+    "production": 1000,
+    "sandbox": 1000
+  },
+  "visibility": "PUBLIC",
+  "visibleRoles": [],
+  "visibleTenants": [],
+  "gatewayEnvironments": [
+    "Production and Sandbox"
+  ],
+  "subscriptionAvailability": "CURRENT_TENANT",
+  "additionalProperties": {
+    "additionalProp1": "additionalPropVal1"
+  },
+  "accessControl": "NONE",
+  "businessInformation": {
+    "businessOwner": "John Doe",
+    "businessOwnerEmail": "johndoe@wso2.com",
+    "technicalOwner": "Jane Roe",
+    "technicalOwnerEmail": "janeroe@wso2.com"
+  },
+  "endpointConfig": {
+    "endpoint_type": "http",
+    "sandbox_endpoints": {
+      "url": "https://localhost:9443/am/sample/pizzashack/v1/api/"
+    },
+    "production_endpoints": {
+      "url": "https://localhost:9443/am/sample/pizzashack/v1/api/"
+    }
+  },
+  "operations": [
+    {
+      "target": "/order/{orderId}",
+      "verb": "POST",
+      "authType": "Application & Application User",
+      "throttlingPolicy": "Unlimited"
+    },
+    {
+      "target": "/menu",
+      "verb": "GET",
+      "authType": "Application & Application User",
+      "throttlingPolicy": "Unlimited"
+    }
+  ]
+}

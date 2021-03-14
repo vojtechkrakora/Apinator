@@ -1,0 +1,10 @@
+---
+# defaults file for apim
+#
+
+- hosts: localhost
+  connection: local
+
+
+  tasks:
+  - include: tasks/createApiTask.yml

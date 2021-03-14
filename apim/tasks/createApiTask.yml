@@ -27,7 +27,7 @@
 - name: "Generate Acess Token"
   register: _token
   uri:
-    url: https://localhost:8243/token?grant_type=password&username=admin&password=admin
+    url: https://localhost:8243/token?grant_type=password&username=admin&password=admin&scope=apim:api_create+apim:api_publish+apim:api_view+apim:subscribe
     validate_certs: no
     follow_redirects: none
     headers:
@@ -38,3 +38,21 @@
 
 - debug:
     var: _token.content
+
+- name: "Add API from template"
+  register: _addTemplate
+  uri:
+    url: https://localhost:9443/api/am/publisher/v1.2/apis
+    validate_certs: no
+    follow_redirects: none
+    headers:
+        Authorization: Bearer {{ _token.json.access_token }}
+    method: POST
+    body_format: json
+    body: "{{ lookup('template', 'templates/AddApi_json.j2') }}"
+    return_content: true
+    status_code: 201
+    timeout: 10
+
+- debug:
+    var: _addTemplate

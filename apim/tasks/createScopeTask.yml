@@ -1,0 +1,59 @@
+---
+# Task for APIM Scope creation
+
+- name: "Check connection to APIM"
+  uri:
+    url: https://localhost:9443/publisher/apis
+    validate_certs: no
+    follow_redirects: none
+  
+- name: "Register DCR App"
+  register: _result
+  uri:
+    url: https://localhost:9443/client-registration/v0.17/register
+    validate_certs: no
+    headers:
+        Content-Type: application/json
+        Authorization: Basic YWRtaW46YWRtaW4=
+    method: POST
+    body_format: json
+    body: '{"callbackUrl":"www.google.lk",  "clientName":"quickstart",  "owner":"admin",  "grantType":"client_credentials password refresh_token",  "saasApp":true}'
+    return_content: true
+    timeout: 10
+
+- debug: 
+    var: _result.content
+
+- name: "Generate Acess Token"
+  register: _token
+  uri:
+    url: https://localhost:8243/token?grant_type=password&username=admin&password=admin&scope=apim:api_create+apim:api_publish+apim:api_view+apim:subscribe+apim:shared_scope_manage
+    validate_certs: no
+    follow_redirects: none
+    headers:
+        Authorization: Basic {{ (_result.json.clientId + ":" +  _result.json.clientSecret) | b64encode }}
+    method: POST
+    return_content: true
+    timeout: 10
+ 
+- debug:
+    var: _token.content
+
+- name: "Add Scope from template"
+  register: _addScope
+  uri:
+    url: https://localhost:9443/api/am/publisher/v1.2/scopes
+    validate_certs: no
+    follow_redirects: none
+    headers:
+        Authorization: Bearer {{ _token.json.access_token }}
+    method: POST
+    body_format: json
+    body: "{{ lookup('template', 'templates/AddScope_json.j2') }}"
+    return_content: true
+    status_code: 201
+    timeout: 10
+
+- debug:
+    var: _addScope.content
+
